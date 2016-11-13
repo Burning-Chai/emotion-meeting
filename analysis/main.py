@@ -17,8 +17,11 @@ def get_dirs(path):
     return dirs
 
 
-# path ... ${PROJECT_ROOT}/upload/${companyId}
 def analytics_emotion(path):
+    """
+    :param path: ${PROJECT_ROOT}/upload/${companyId}
+    :return:
+    """
     for start_time in os.listdir(path):
         save_directly = os.path.join(path, start_time)
 
