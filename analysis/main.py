@@ -17,22 +17,19 @@ def get_dirs(path):
     return dirs
 
 
-def analytics_emotion(path):
+def analytics_emotion(save_directly):
     """
-    :param path: ${PROJECT_ROOT}/upload/${companyId}
+    :param save_directly: ${PROJECT_ROOT}/upload/${companyId}/${startTime}
     :return:
     """
-    for start_time in os.listdir(path):
-        save_directly = os.path.join(path, start_time)
+    sorted_list = sorted(os.listdir(save_directly))
+    for index, name in enumerate(sorted_list):
+        wav_file = os.path.join(save_directly, name)
+        if os.path.isdir(wav_file):
+            continue
 
-        sorted_list = sorted(os.listdir(save_directly))
-        for index, name in enumerate(sorted_list):
-            wav_file = os.path.join(save_directly, name)
-            if os.path.isdir(wav_file):
-                continue
-
-            emotion = api.emotion.call(wav_file)
-            service.emotion.save(company_id, emotion, start_time, index)
+        emotion = api.emotion.call(wav_file)
+        service.emotion.save(company_id, emotion, start_time, index)
 
 
 if __name__ == "__main__":
@@ -42,4 +39,6 @@ if __name__ == "__main__":
     company_id_list = get_dirs(upload_directly)
 
     for company_id in company_id_list:
-        analytics_emotion(os.path.join(upload_directly, company_id))
+        company_directly = os.path.join(upload_directly, company_id)
+        for start_time in os.listdir(company_directly):
+            analytics_emotion(os.path.join(company_directly, start_time))
